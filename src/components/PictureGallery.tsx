@@ -45,6 +45,9 @@ export default function PictureGallery({
       setIndex(index + 1);
       setLoading(true);
     }
+    if (e?.key === "Escape") {
+      setShowModal(false);
+    }
   }
 
   useEffect(() => {
@@ -140,7 +143,7 @@ export default function PictureGallery({
         >
           &gt;
         </button>
-        <Image
+        <img
           src={currentPic?.urls.full || ""}
           width={currentPic?.width}
           height={currentPic?.height}
@@ -166,7 +169,7 @@ export default function PictureGallery({
         >
           <path d="M21 12a9 9 0 1 1-6.219-8.56" />
         </svg>
-        <div className="fixed bottom-0 bg-black/70 w-full text-center">
+        <div className="fixed bottom-0 bg-black/70 w-full text-center py-3">
           <p>{currentPic?.alt_description}</p>
           <p>
             Author - {currentPic?.user.name}
