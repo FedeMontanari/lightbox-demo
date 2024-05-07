@@ -4,6 +4,7 @@ import { UnsplashResponse } from "@/types/unsplash";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import Skeleton from "./Skeleton";
 
 const pictureSizes = {
   regular: {
@@ -58,6 +59,13 @@ export default function PictureGallery({
   });
 
   useEffect(() => {
+    const body = document.getElementById("root");
+    showModal
+      ? body?.classList.add("overflow-y-hidden")
+      : body?.classList.remove("overflow-y-hidden");
+  }, [showModal]);
+
+  useEffect(() => {
     setCurrentPic(pictures[index]);
   }, [index]);
   return (
@@ -66,21 +74,23 @@ export default function PictureGallery({
         return (
           <div
             key={pic.id}
-            className="border rounded-md flex flex-col items-center justify-center hover:scale-105 hover:cursor-zoom-in"
+            className="border rounded-md flex flex-col items-center justify-center group hover:cursor-zoom-in"
             onClick={() => {
               setShowModal(true);
               setCurrentPic(pic);
               setIndex(i);
             }}
           >
-            <Image
-              alt={pic.alt_description}
-              src={pic.urls.thumb}
-              width={pictureSizes.thumb.width}
-              height={pictureSizes.thumb.height}
-              className="p-3"
-            />
-            <span className="border-t p-3">
+            <div className="max-h-full max-w-full overflow-hidden">
+              <Image
+                alt={pic.alt_description}
+                src={pic.urls.small}
+                width={pictureSizes.thumb.width}
+                height={pictureSizes.thumb.height}
+                className="p-2 group-hover:scale-125 transition"
+              />
+            </div>
+            <span className="border-t p-3 w-full text-center bg-white/10">
               {pic.user.name}
               <Image
                 src={pic.user.profile_image.small}
@@ -170,17 +180,29 @@ export default function PictureGallery({
           <path d="M21 12a9 9 0 1 1-6.219-8.56" />
         </svg>
         <div className="fixed bottom-0 bg-black/70 w-full text-center py-3">
-          <p>{currentPic?.alt_description}</p>
-          <p>
-            Author - {currentPic?.user.name}
-            <Image
-              alt="Author profile picture"
-              src={currentPic?.user.profile_image.small || ""}
-              height={32}
-              width={32}
-              className="inline rounded-full ml-2"
-            />
-          </p>
+          {loading ? (
+            <div className="space-y-1">
+              <Skeleton className="w-64 h-4 mx-auto" />
+              <div className="flex flex-row items-center justify-center gap-x-3">
+                <Skeleton className="w-48 h-4" />
+                <Skeleton className="rounded-full size-8" />
+              </div>
+            </div>
+          ) : (
+            <>
+              <p>{currentPic?.alt_description}</p>
+              <p>
+                Author - {currentPic?.user.name}
+                <Image
+                  alt="Author profile picture"
+                  src={currentPic?.user.profile_image.small || ""}
+                  height={32}
+                  width={32}
+                  className="inline rounded-full ml-2"
+                />
+              </p>
+            </>
+          )}
         </div>
       </div>
     </>
