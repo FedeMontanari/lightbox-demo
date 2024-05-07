@@ -6,7 +6,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Skeleton from "./Skeleton";
 
-const pictureSizes = {
+export const pictureSizes = {
   regular: {
     height: 1920,
     width: 1080,
@@ -69,16 +69,19 @@ export default function PictureGallery({
     setCurrentPic(pictures[index]);
   }, [index]);
   return (
-    <>
+    <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4 items-center">
       {pictures.map((pic, i) => {
         return (
           <div
             key={pic.id}
-            className="border rounded-md flex flex-col items-center justify-center group hover:cursor-zoom-in"
+            className={`border rounded-md flex flex-col items-center justify-center group hover:cursor-zoom-in ${
+              i === 8 ? "lg:col-start-2" : ""
+            } ${i === 9 ? "md:col-start-2 lg:col-start-3" : ""}`}
             onClick={() => {
               setShowModal(true);
               setCurrentPic(pic);
               setIndex(i);
+              setLoading(true);
             }}
           >
             <div className="max-h-full max-w-full overflow-hidden">
@@ -90,7 +93,7 @@ export default function PictureGallery({
                 className="p-2 group-hover:scale-125 transition"
               />
             </div>
-            <span className="border-t p-3 w-full text-center bg-white/10">
+            <span className="border-t p-3 w-full text-center bg-white/10 mt-auto">
               {pic.user.name}
               <Image
                 src={pic.user.profile_image.small}
@@ -104,6 +107,7 @@ export default function PictureGallery({
         );
       })}
 
+      {/* Modal Container */}
       <div
         className={`fixed flex-col top-0 left-0 h-screen w-screen items-center justify-center max-h-screen max-w-screen bg-black/70 py-2 md:px-6 ${
           showModal ? "flex" : "hidden"
@@ -205,6 +209,6 @@ export default function PictureGallery({
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

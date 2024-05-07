@@ -20,7 +20,7 @@ export default async function Home() {
       <h1 className="text-2xl font-bold border-b mb-5">
         Pictures Gallery and Lightbox
       </h1>
-      <section className="flex flex-row items-center justify-center flex-wrap gap-3">
+      <section>
         <PictureGallery pictures={pictures} />
       </section>
     </main>
